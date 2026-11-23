@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>StudyBoard</h1>
+    <button id="add-btn" class="btn primary" type="button">Ajouter une tâche</button>
+  </header>
+
+  <main class="board">
+    <section class="column" data-status="todo" aria-labelledby="h-todo">
+      <h2 id="h-todo">À faire <span class="count"></span></h2>
+      <ul class="list"></ul>
+    </section>
+    <section class="column" data-status="doing" aria-labelledby="h-doing">
+      <h2 id="h-doing">En cours <span class="count"></span></h2>
+      <ul class="list"></ul>
+    </section>
+    <section class="column" data-status="done" aria-labelledby="h-done">
+      <h2 id="h-done">Terminé <span class="count"></span></h2>
+      <ul class="list"></ul>
+    </section>
+  </main>
+
+  <dialog id="task-dialog">
+    <form id="task-form">
+      <h2 id="dialog-title">Nouvelle tâche</h2>
+      <label>Titre
+        <input name="title" type="text" maxlength="80" required>
+      </label>
+      <label>Matière
+        <input name="subject" type="text" maxlength="30" placeholder="Ex : Maths, Anglais, Projet web">
+      </label>
+      <div class="row">
+        <label>Deadline
+          <input name="deadline" type="date">
+        </label>
+        <label>Priorité
+          <select name="priority">
+            <option value="low">Basse</option>
+            <option value="medium" selected>Moyenne</option>
+            <option value="high">Haute</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button id="cancel-btn" class="btn" type="button">Annuler</button>
+        <button class="btn primary" type="submit">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
