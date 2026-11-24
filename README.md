@@ -2,7 +2,7 @@
 
 Un tableau Kanban pour suivre ses devoirs, projets et révisions. Fait en HTML, CSS et JavaScript, sans framework ni backend.
 
-**Démo :** `https://TON-PSEUDO.github.io/studyboard/`
+**Démo :** https://jvrlc.github.io/studyboard/
 
 ![Capture d'écran](screenshot.png)
 
@@ -26,7 +26,7 @@ Un tableau Kanban pour suivre ses devoirs, projets et révisions. Fait en HTML, 
 ## Lancer le projet
 
 ```bash
-git clone https://github.com/TON-PSEUDO/studyboard.git
+git clone https://github.com/JVRLC/studyboard.git
 cd studyboard
 ```
 
