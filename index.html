@@ -4,40 +4,103 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>StudyBoard</title>
+  <meta name="description" content="Un tableau Kanban pour suivre ses devoirs, projets et révisions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    try { var t = localStorage.getItem("studyboard.theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
 </head>
 <body>
-  <header class="top">
-    <h1>StudyBoard</h1>
-    <button id="add-btn" class="btn primary" type="button">Ajouter une tâche</button>
-  </header>
+  <div class="app">
+    <aside class="sidebar" aria-label="Navigation">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">S</span>
+        <span class="wordmark">StudyBoard</span>
+      </div>
 
-  <main class="board">
-    <section class="column" data-status="todo" aria-labelledby="h-todo">
-      <h2 id="h-todo">À faire <span class="count"></span></h2>
-      <ul class="list"></ul>
-    </section>
-    <section class="column" data-status="doing" aria-labelledby="h-doing">
-      <h2 id="h-doing">En cours <span class="count"></span></h2>
-      <ul class="list"></ul>
-    </section>
-    <section class="column" data-status="done" aria-labelledby="h-done">
-      <h2 id="h-done">Terminé <span class="count"></span></h2>
-      <ul class="list"></ul>
-    </section>
-  </main>
+      <label class="search">
+        <span class="sr-only">Recherche</span>
+        <input id="search" type="search" placeholder="Rechercher" autocomplete="off">
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+
+      <nav class="group" aria-labelledby="h-subjects">
+        <h2 class="eyebrow" id="h-subjects">Matières</h2>
+        <ul id="subjects" class="subjects"></ul>
+      </nav>
+
+      <div class="group">
+        <h2 class="eyebrow" id="h-priority">Priorité</h2>
+        <div id="priority-filter" class="seg" role="group" aria-labelledby="h-priority">
+          <button type="button" data-priority="" aria-pressed="true">Toutes</button>
+          <button type="button" data-priority="high" aria-pressed="false">Haute</button>
+          <button type="button" data-priority="medium" aria-pressed="false">Moy.</button>
+          <button type="button" data-priority="low" aria-pressed="false">Basse</button>
+        </div>
+      </div>
+
+      <section class="group overview" aria-labelledby="h-overview">
+        <h2 class="eyebrow" id="h-overview">Avancement</h2>
+        <p class="big"><span id="stat-pct">0 %</span></p>
+        <div id="bar" class="bar" role="progressbar" aria-label="Avancement" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+        <dl class="facts">
+          <div><dt>Terminées</dt><dd id="stat-done">0/0</dd></div>
+          <div><dt>En retard</dt><dd id="stat-late">0</dd></div>
+          <div><dt>Temps étudié</dt><dd id="stat-time">—</dd></div>
+        </dl>
+      </section>
+
+      <div class="side-foot">
+        <button id="export-btn" class="link" type="button">Exporter</button>
+        <button id="import-btn" class="link" type="button">Importer</button>
+        <button id="theme-btn" class="link" type="button" aria-label="Basculer entre thème clair et sombre">Thème</button>
+        <input id="import-file" type="file" accept="application/json,.json" hidden>
+      </div>
+    </aside>
+
+    <div class="content">
+      <header class="top">
+        <div>
+          <p id="today" class="today"></p>
+          <h1>Tableau</h1>
+        </div>
+        <button id="add-btn" class="btn primary" type="button">Ajouter une tâche <kbd aria-hidden="true">N</kbd></button>
+      </header>
+
+      <main class="board">
+        <section class="column" data-status="todo" aria-labelledby="h-todo">
+          <h2 id="h-todo"><span class="dot" aria-hidden="true"></span>À faire <span class="count"></span>
+            <button class="col-add" type="button" data-add="todo" aria-label="Ajouter une tâche dans À faire">+</button></h2>
+          <ul class="list" aria-live="polite"></ul>
+        </section>
+        <section class="column" data-status="doing" aria-labelledby="h-doing">
+          <h2 id="h-doing"><span class="dot" aria-hidden="true"></span>En cours <span class="count"></span>
+            <button class="col-add" type="button" data-add="doing" aria-label="Ajouter une tâche dans En cours">+</button></h2>
+          <ul class="list" aria-live="polite"></ul>
+        </section>
+        <section class="column" data-status="done" aria-labelledby="h-done">
+          <h2 id="h-done"><span class="dot" aria-hidden="true"></span>Terminé <span class="count"></span></h2>
+          <ul class="list" aria-live="polite"></ul>
+        </section>
+      </main>
+    </div>
+  </div>
 
   <dialog id="task-dialog">
     <form id="task-form">
       <h2 id="dialog-title">Nouvelle tâche</h2>
       <label>Titre
-        <input name="title" type="text" maxlength="80" required>
+        <input name="title" type="text" maxlength="80" required autofocus>
       </label>
       <label>Matière
         <input name="subject" type="text" maxlength="30" placeholder="Ex : Maths, Anglais, Projet web">
+      </label>
+      <label>Notes
+        <textarea name="notes" rows="3" maxlength="500" placeholder="Chapitres, liens, points à revoir…"></textarea>
       </label>
       <div class="row">
         <label>Deadline
